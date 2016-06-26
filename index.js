@@ -39,9 +39,9 @@ DoorAccessory.prototype.getState = function(callback) {
 	}, function(err, response, body) {
 		if (!err && response.statusCode == 200) {
 			var json = JSON.parse(body);
-			var state = json.state; // "open" or "closed"
-			this.log("Door state is %s", state);
-			var closed = state == "closed"
+			var state = json.open;
+			this.log("Open = %s", state);
+			var closed = !state 
 			callback(null, closed); // success
 		} else {
 			this.log("Error getting state: %s", err);
@@ -54,7 +54,7 @@ DoorAccessory.prototype.setState = function(state, callback) {
 	var doorState = (state == Characteristic.TargetDoorState.CLOSED) ? "closed" : "open";
 	this.log("Set state to %s", doorState);
 	
-	request.post({
+	request.get({
 		url: this.controlurl
 	}, function(err, response, body) {
 		if (!err && response.statusCode == 200) {
